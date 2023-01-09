@@ -31,12 +31,27 @@ var myItem = [
     },
     {
         id: 5,
-        uri: "https://cdn.pixabay.com/photo/2015/10/30/20/13/sunrise-1014712_960_720.jpg",
+        uri: "https://thuthuatphanmem.vn/uploads/2018/04/10/hinh-anh-dep-ve-tinh-yeu-55_052634485.jpg",
         description: "Họ Chim ruồi (Trochilidae), còn được gọi là họ Chim ong là một họ chim mà các loài có kích thước nhỏ nhất trong tất cả các loài chim, khi bay và giữ nguyên một vị trí, cánh chim vỗ lên tới 70 lần/giây(trung bình từ 30-40 lần/giây[1]) tạo ra tiếng vo ve như ruồi nên mới có tên là chim ruồi. Vì giống chim này hay hút mật hoa nên danh xưng chim ong cũng hợp với tập tính của loài chim này",
     },
     {
         id: 6,
-        uri: "https://cdn.pixabay.com/photo/2015/10/30/20/13/sunrise-1014712_960_720.jpg",
+        uri: "https://thuthuatphanmem.vn/uploads/2018/09/11/hinh-anh-dep-60_044135017.jpg",
+        description: "Họ Chim ruồi (Trochilidae), còn được gọi là họ Chim ong là một họ chim mà các loài có kích thước nhỏ nhất trong tất cả các loài chim, khi bay và giữ nguyên một vị trí, cánh chim vỗ lên tới 70 lần/giây(trung bình từ 30-40 lần/giây[1]) tạo ra tiếng vo ve như ruồi nên mới có tên là chim ruồi. Vì giống chim này hay hút mật hoa nên danh xưng chim ong cũng hợp với tập tính của loài chim này",
+    },
+    {
+        id: 7,
+        uri: "https://msmobile.com.vn/images/news/2018/06/08/large/hinh-anh-dep-ve-tinh-yeu-doi-lua_1528442144.jpg",
+        description: "Họ Chim ruồi (Trochilidae), còn được gọi là họ Chim ong là một họ chim mà các loài có kích thước nhỏ nhất trong tất cả các loài chim, khi bay và giữ nguyên một vị trí, cánh chim vỗ lên tới 70 lần/giây(trung bình từ 30-40 lần/giây[1]) tạo ra tiếng vo ve như ruồi nên mới có tên là chim ruồi. Vì giống chim này hay hút mật hoa nên danh xưng chim ong cũng hợp với tập tính của loài chim này",
+    },
+    {
+        id: 8,
+        uri: "https://img.thuthuattinhoc.vn/uploads/2019/01/13/hinh-anh-trai-tim-tinh-yeu-dep-nhat_104527634.png",
+        description: "Họ Chim ruồi (Trochilidae), còn được gọi là họ Chim ong là một họ chim mà các loài có kích thước nhỏ nhất trong tất cả các loài chim, khi bay và giữ nguyên một vị trí, cánh chim vỗ lên tới 70 lần/giây(trung bình từ 30-40 lần/giây[1]) tạo ra tiếng vo ve như ruồi nên mới có tên là chim ruồi. Vì giống chim này hay hút mật hoa nên danh xưng chim ong cũng hợp với tập tính của loài chim này",
+    },
+    {
+        id: 9,
+        uri: "https://thuthuatphanmem.vn/uploads/2018/09/11/hinh-anh-dep-6_044127357.jpg",
         description: "Họ Chim ruồi (Trochilidae), còn được gọi là họ Chim ong là một họ chim mà các loài có kích thước nhỏ nhất trong tất cả các loài chim, khi bay và giữ nguyên một vị trí, cánh chim vỗ lên tới 70 lần/giây(trung bình từ 30-40 lần/giây[1]) tạo ra tiếng vo ve như ruồi nên mới có tên là chim ruồi. Vì giống chim này hay hút mật hoa nên danh xưng chim ong cũng hợp với tập tính của loài chim này",
     }
 ]
@@ -46,7 +61,7 @@ const app = {
     index: 0,
     isList: true,
     isCaroul: false,
-    pageCount: 2,
+    pageCount: 1,
     indexListStartCut: 0,
     indexList: 0,
     isStatusButtonSetting: false,
@@ -206,6 +221,7 @@ const app = {
             console.log("hehehee");
             console.log($("#ddlViewBy").val());
             this.pageCount = +($("#ddlViewBy").val());
+            this.indexList = 0;
             this.renderList();
         });
 
@@ -278,8 +294,20 @@ const app = {
         console.log("hehe:", myItem);
         let html = null;
 
+        console.log("pageCount:",this.pageCount);
+        console.log("this.indexList:",this.indexList);
+        //indexList.
+        //myarrr;
+
+        let start = this.indexList*this.pageCount >= myItem.length ? (myItem.length - this.pageCount) :
+            this.indexList*this.pageCount
+        ;
+        let end = (this.indexList*this.pageCount+this.pageCount) >= myItem.length ? myItem.length :
+        (this.indexList*this.pageCount+this.pageCount);
+        ;
+
         if (myItem && myItem.length) {
-            html = myItem.slice(this.indexListStartCut, this.pageCount).map((el, index) => {
+            html = myItem.slice(start, end ).map((el, index) => {
                 return (`
                 <div class="list-section">
                     <div class="container-image">
@@ -304,11 +332,18 @@ const app = {
     },
     renderPaging: function () {
         let pageCount = null;
-        let testArr = [1,2,3,4,5,6,7,8,9,10];
+        let valueNeedTo  = (myItem.length/this.pageCount);
+        let lengthPage = Math.ceil(valueNeedTo);
+        let testArr = [];
+        for (let index = 0; index < lengthPage; index++) {
+            testArr.push((index+1));
+        }
         if (myItem && myItem.length) {
             let start = this.indexList - 2 <= 0 ? 0 : (this.indexList - 2) ;
             let newarr =(testArr.length>5) ? testArr.slice((start + 5) > testArr.length ? testArr.length - 5 : start, (5 + start) > testArr.length ? testArr.length : (5 + start)) : testArr
             
+
+
             
             pageCount = newarr.map((e, index) => {
                 return (`
@@ -345,9 +380,9 @@ const app = {
 
         }
         $(".page__").on("click",(e)=>{
-            console.log(e.target.textContent);
+            console.log("indexList:",e.target.textContent);
             this.indexList = +(e.target.textContent) - 1;
-            this.renderPaging();
+            this.renderList();
         })
 
 
