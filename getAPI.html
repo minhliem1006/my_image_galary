@@ -1,0 +1,170 @@
+<p id="demo">Nhấn vào đây để thay đổi màu chữ.</p>
+<p>Nhấn vào thẻ p bên trên để kích hoạt hàm thay đổi màu của chữ trong thẻ sang đỏ.</p>
+<div id="test-img">
+
+    <img src="https://avantility.sharepoint.com/sites/dev/liemho/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Fdev%2Fliemho%2FShared%20Documents%2Fgirl%5F1%2Ejpg&viewid=f161c88d%2D6dd1%2D4b1c%2Db0b9%2D353c2c09866e&parent=%2Fsites%2Fdev%2Fliemho%2FShared%20Docume"
+        style="width:100px ; height: 100px;" />
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
+
+<script>
+    // It is preferred to use a self-executing function around your script if
+    // code should run on each page load
+    // See https://developer.mozilla.org/en-US/docs/Glossary/IIFE
+    // (function () {
+    //     // put script here
+    //     console.log('_spPageContextInfo', _spPageContextInfo);
+    //     var div = document.getElementById('divContent');
+    //     if (div) {
+    //         div.innerHTML = `Hello ${_spPageContextInfo.userDisplayName}`
+    //     }
+    // })() 
+</script>
+<script>
+    $("#demo").on("click", () => {
+        console.log("aaaa");
+
+        console.log("_spPageContextInfo:", _spPageContextInfo);
+
+        var WebAbsoluteURL = _spPageContextInfo.webAbsoluteUrl;
+
+        var portalUrl = _spPageContextInfo.portalUrl;
+        var navigationInfo = _spPageContextInfo.navigationInfo;
+        var quickLaunch = navigationInfo?.quickLaunch;
+        let documentUrl = null;
+        if (quickLaunch && quickLaunch.length) {
+            quickLaunch.forEach(element => {
+                if (element.Title === "Documents") {
+                    documentUrl = element.Url;
+                }
+            });
+
+            let newChoose = quickLaunch.map((el)=>{
+                return(`
+                    <option value="${el.Title}">${el.Title}</option>
+                `)
+            })
+            newChoose.join("");
+            chooseFileFrom.html(newChoose);
+
+        }
+
+
+
+        console.log("documentUrl:", documentUrl);
+
+        console.log('navigationInfo:', navigationInfo);
+        console.log('quickLaunch:', quickLaunch);
+        console.log('portalUrl:', portalUrl);
+
+
+        console.log('WebAbsoluteURL:', WebAbsoluteURL);
+        console.log('listTitle', _spPageContextInfo.listTitle);
+
+        let myUrlChoose = null;
+        if (documentUrl) {
+            myUrlChoose = portalUrl + documentUrl.substring(1);
+        }
+
+        // let uriii = WebAbsoluteURL + `/_api/web/lists/GetByTitle('Documents')`;
+        // let uriii = WebAbsoluteURL + `/_api/lists/getbytitle('Images')/Items`;
+        // https://avantility.sharepoint.com/sites/dev/liemho/_api/web/lists/GetByTitle('Images')
+
+        // "/_api/lists/getbytitle('Documents')/Items?$select=RedirectLink,Caption,Information,File/Name,File/ServerRelativeUrl
+        // select dc ServerRelativeUrl;
+        let uriii = WebAbsoluteURL +
+            `/_api/lists/getbytitle('Documents')/Items?$select=RedirectLink,Caption,Information,File/Name,File/ServerRelativeUrl`;
+        let uriiii =
+            "https://avantility.sharepoint.com/sites/dev/liemho/_api/Web/Lists(guid'044b2f98-0493-42af-b99d-5b3c55a1f497')/Items(15)/File";
+        console.log("uriii:", uriii);
+        console.log("uriii:", uriiii);
+  
+        fetch(uriii, 
+            {
+            method: 'GET', // or 'PUT'
+            headers: {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose",
+                "X-RequestDigest": $("#__REQUESTDIGEST").val()
+            },
+            // body: JSON.stringify(data),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+
+                if (data.d?.results) {
+                    return data.d.results;
+                }
+                else {
+                    return [];
+                }
+            }).then((results) => {
+                let arrayInfor = [];
+                let arrayImage = [];
+                let promises = [];
+                for (let index = 0; index < results.length; index++) {
+                    let item = results[index];
+                    let newItem = {
+                        id: index,
+                        information: item.Information || "",
+                        caption: item.Caption || "",
+                        redirectLink: item.RedirectLink || "",
+                        uri: item.__metadata?.uri || "",
+                        uriFile : item.File?.__deferred?.uri || "",
+                    }
+                    arrayInfor.push(newItem);
+
+                }
+
+                return arrayInfor;
+            }).then((arrayInfor)=>{
+                arrayInfor.forEach((e)=>{
+                    console.log("uri:",e);
+
+                });
+
+                let newValue =(arrayInfor.map(arrItem =>
+                    fetch(arrItem.uriFile,{
+                        method: 'GET', // or 'PUT'
+                        headers: {
+                            "accept": "application/json;odata=verbose",
+                            "content-type": "application/json;odata=verbose",
+                            "X-RequestDigest": $("#__REQUESTDIGEST").val()
+                        },
+                    }).then((response)=>{
+                        return response.json();
+                    }).then((data)=>{
+                        console.log("data:",data);
+                        
+                        if(data.d){
+                            return {
+                                ...arrItem,
+                                urlImge: portalUrl + data?.d?.ServerRelativeUrl?.substring(1),
+                               
+                            }
+                        }
+                        else
+                        {
+                            return {
+                                ...arrItem,
+                                urlImge:"",
+                            }
+                        }
+
+
+                    })
+                    
+                ));
+                
+                Promise.all(newValue).then((values)=>{
+                    console.log("values:",values);
+                 
+                })
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+</script>

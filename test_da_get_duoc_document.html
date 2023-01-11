@@ -1,0 +1,1446 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .slider-container {
+        height: 100%;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .menu {
+        position: absolute;
+        left: 0;
+        z-index: 900;
+        width: 100%;
+        bottom: 0;
+    }
+
+    .menu label {
+        cursor: pointer;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background: #fff;
+        border-radius: 50px;
+        margin: 0 0.2em 1em;
+        transition: all 0.3s ease;
+    }
+
+    .menu label:hover {
+        background: red;
+    }
+
+    .slide {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        z-index: 10;
+        padding: 8em 1em 0;
+        background-size: cover;
+        background-position: 50% 50%;
+        transition: left 0s 0.75s;
+    }
+
+    [id^="slide"]:checked+.slide {
+        left: 0;
+        z-index: 100;
+        transition: left 0.65s ease-out;
+    }
+
+    .slide-1 {
+        /* background-image: url("https://source.unsplash.com/t7YycgAoVSw/1600x900"); */
+    }
+
+    .slide-2 {
+        background-image: url("https://source.unsplash.com/11H1SSVcIxc/1600x900");
+    }
+
+    .slide-3 {
+        background-image: url("https://source.unsplash.com/OlZ1nWLEEgM/1600x900");
+    }
+
+    /* liem css */
+    .container {
+        width: 100%;
+        height: 500px;
+        /* border-radius: 16px; */
+        background-color: black;
+        box-shadow: 0 0 14px 2px rgb(0 0 0 / 75%);
+        position: relative;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .app {
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        align-items: center;
+        flex-direction: column;
+        /* background-color: #2d4848; */
+        overflow: hidden;
+        position: relative;
+    }
+
+    .prev {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        background-color: transparent;
+        z-index: 99999;
+        transform: translateY(-50%);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        opacity: 0.5;
+    }
+
+    .next {
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background-color: transparent;
+        z-index: 99999;
+        transform: translateY(-50%);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        opacity: 0.5;
+    }
+
+    .next:hover {
+        opacity: 1;
+        background-color: #fff;
+        color: var(--primary);
+        cursor: pointer;
+    }
+
+    .prev:hover {
+        opacity: 1;
+        background-color: #fff;
+        color: var(--primary);
+        cursor: pointer;
+
+    }
+
+    .slider-main {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: none;
+        /* border-radius: 16px; */
+        transition: all ease-in 0.3s;
+        position: absolute;
+        /* top: 0; */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #23adad;
+    }
+
+    .slider-main.active {
+        display: flex !important;
+        animation: animationTest 1s ease-in;
+    }
+
+    .slider-main.active2 {
+        display: flex !important;
+        animation: animationTest 1s ease-in;
+    }
+
+    .slider-main.no-animation {
+        animation: none !important;
+    }
+
+    @keyframes animationTest {
+        0% {
+            /* top:-100%;
+        scale: 1.2; */
+            opacity: 0;
+            /* opacity: 0; */
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            /* top: 0; */
+            /* scale: 1; */
+            opacity: 1;
+            /* opacity: 1; */
+        }
+    }
+
+    @keyframes animationTest2 {
+        0% {
+            top: -100%;
+            scale: 1.2;
+            /* opacity: 0; */
+        }
+
+        100% {
+            top: 0;
+            scale: 1;
+
+            /* opacity: 1; */
+        }
+    }
+
+    .image-main-container {
+        flex: 1;
+        background-color: gray;
+        background-image: url("https://img6.thuthuatphanmem.vn/uploads/2022/11/18/hinh-dang-loading_093255098.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    .image-main {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+
+    }
+
+    .content {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        display: flex;
+        /* justify-content: center;
+    align-items: center; */
+        flex-direction: column;
+        padding: 20px;
+        overflow: hidden;
+
+
+    }
+
+    .content-wraper {
+        height: 88%;
+        overflow: hidden;
+    }
+
+
+    /* width */
+    .content-wraper::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    /* Track */
+    .content-wraper::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        border-radius: 10px;
+    }
+
+    /* Handle */
+    .content-wraper::-webkit-scrollbar-thumb {
+        background: black;
+        border-radius: 10px;
+    }
+
+
+
+
+    .content-text {
+        /* height: 90%; */
+        overflow: hidden;
+        /* overflow-y: scroll; */
+        font-size: 18px;
+        padding: 10px;
+
+    }
+
+    .read-more {
+        text-align: center;
+        font-weight: bold;
+        color: #8c62b7;
+        cursor: pointer;
+        padding-top: 2px;
+        font-size: 18px;
+    }
+
+    .collapse {
+        text-align: center;
+        font-weight: bold;
+        color: #8c62b7;
+        cursor: pointer;
+        display: none;
+        padding-top: 2px;
+        font-size: 18px;
+
+    }
+
+
+
+
+    :root {
+        --primary: #8c62b7;
+        --greyLight: #23adad e1;
+        --greyLight-2: #cbe0dd;
+        --greyDark: #2d4848;
+    }
+
+    /* *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+    overflow-y: scroll;
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 0.6px;
+    line-height: 1.4;
+    -webkit-user-select: none;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+} */
+    .container1 {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: var(--greyLight-2);
+        color: var(--greyDark);
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    .items-list {
+        max-width: 90vw;
+        margin: 2rem;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 3rem;
+        justify-content: center;
+        align-content: center;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .items-list {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .item {
+        width: 10rem;
+        height: 10rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--greyDark);
+        cursor: pointer;
+    }
+
+    .item span {
+        background: #fff;
+        box-shadow: 0 0.8rem 2rem rgba(90, 97, 129, 0.05);
+        border-radius: 0.6rem;
+        padding: 2rem;
+        font-size: 3rem;
+        transition: all 0.3s ease;
+    }
+
+    .item:hover span {
+        transform: scale(1.2);
+        color: var(--primary);
+    }
+
+    .item p {
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        color: var(--greyLight);
+    }
+
+    .page,
+    .paging-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 5rem;
+        margin: 3rem;
+        border-radius: 0.6rem;
+        background: #fff;
+        box-shadow: 0 0.8rem 2rem rgba(90, 97, 129, 0.05);
+    }
+
+    .page__numbers,
+    .page__,
+    .page__btn,
+    .page__dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0.8rem;
+        font-size: 1.4rem;
+        cursor: pointer;
+    }
+
+    .page__btn:active {
+        color: #8c62b7;
+    }
+
+
+    .page__dots,
+    .page__ {
+        width: 2.6rem;
+        height: 2.6rem;
+        color: var(--greyLight);
+        cursor: initial;
+    }
+
+    .page__numbers,
+    .page__ {
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 0.4rem;
+    }
+
+    .page__numbers:hover {
+        color: var(--primary);
+    }
+
+    .page__:hover {
+        color: var(--primary);
+    }
+
+    .page__numbers.active {
+        color: #fff;
+        background: var(--primary);
+        font-weight: 600;
+        border: 1px solid var(--primary);
+    }
+
+    .page__.active {
+        color: #fff;
+        background: var(--primary);
+        font-weight: 600;
+        border: 1px solid var(--primary);
+    }
+
+    .page__btn {
+        color: var(--greyLight);
+        /* pointer-events: none; */
+        cursor: pointer;
+        z-index: 9999;
+    }
+
+    .page__btn.active {
+        color: var(--greyDark);
+        pointer-events: initial;
+    }
+
+
+
+    .page__btn.active:hover {
+        color: var(--primary);
+    }
+
+
+    .controller_options {
+        background-color: #fff;
+        padding: 20px;
+        position: absolute;
+        top: -120%;
+        left: 0;
+        display: none;
+        z-index: 99999;
+        min-width: 250px;
+        min-height: 200px;
+        border: #2d4848;
+        box-shadow: 10px 10px 8px #888888;
+    }
+
+    .setting-icon {
+        /* position: absolute; */
+        /* top: 50%; */
+        /* right: 20px; */
+        cursor: pointer;
+    }
+
+    .setting_text {
+        position: relative;
+    }
+
+    .setting_close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        color: red;
+        cursor: pointer;
+    }
+
+    .setting-icon.active {
+        color: red;
+    }
+
+    .range_duration {
+        display: flex;
+        /* justify-content: center; */
+        align-items: center;
+    }
+
+    .btn-auto-pause {
+        display: none;
+    }
+
+    .contain-btn-auto {
+        height: 50px;
+        width: 50px;
+        display: flex;
+
+    }
+
+    .page__numbers.active {
+        /* color: red; */
+    }
+
+
+    /* input switch */
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked+.slider {
+        background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+
+
+    .caroul {
+        display: block;
+    }
+
+    .list {
+        display: none;
+    }
+
+    .section_choose_caroul {
+        display: block;
+        width: 100%;
+    }
+
+    @media (max-width:1023px) {
+        .section_choose_caroul {
+            width: 80%;
+        }
+    }
+
+    .section_choose_list {
+        display: none;
+    }
+
+
+    .list-container {
+        /* background-color: #2196F3; */
+        width: 681px;
+        height: 90vh;
+        /* display: flex; */
+        /* align-items: center; */
+        /* justify-content: center; */
+        /* flex-direction: column; */
+        overflow-y: scroll;
+        /* padding-top: 20px;
+    margin-top: 40px; */
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* justify-content: flex-start; */
+        position: relative;
+    }
+
+    .list-section {
+        display: flex;
+        /* align-items: flex-start; */
+        justify-content: space-between;
+        /* margin-bottom: 30px; */
+        /* padding: 10px 20px; */
+        height: 300px;
+        margin-top: 10px;
+        /* justify-content: flex-start; */
+        align-items: center;
+        /* background-color: aqua; */
+        padding-left: 10px;
+    }
+
+
+    .container-image {
+        width: 300px;
+        height: 200px;
+        /* border-radius: 16px; */
+        background-color: black;
+        box-shadow: 0 0 11px 2px rgb(0 0 0 / 75%);
+        position: relative;
+        overflow: hidden;
+        background-color: #fff;
+
+    }
+
+    .list-section-text {
+        /* background-color: #2d4848; */
+        width: 50%;
+    }
+
+    .container-image-img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+    .page-list-container {
+        /* position: absolute; */
+        left: auto;
+        top: 50%;
+    }
+
+    .btn-next-caroul {
+        /* color: red;
+    cursor: pointer !important; */
+    }
+
+    .loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #8c62b7;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite;
+        /* Safari */
+        animation: spin 2s linear infinite;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loader-center {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<body>
+    <div class="app">
+        <div class="section_choose_caroul">
+            <div class="container">
+                <div class="prev">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </div>
+                <div class="next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+            <div style="display: flex;justify-content:center;align-items: center;position: relative;">
+                <div class="setting-icon"><i class="fa-solid fa-gear"></i></div>
+                <div class="controller_options">
+                    <div class="setting_text" style="font-size: 16px;font-weight: bold;">Setting</div>
+                    <div class="setting_close"><i class="fa-solid fa-xmark"></i></div>
+                    <div>Choose File frome</div>
+                    <div class="options-choose-file">
+                        <select id="choose-file-selected">
+                        </select>
+                    </div>
+
+                    <div style="display: flex;">
+                        <div>
+                            <span>Caroul</span><input id="caroul-checkbox" type="checkbox" checked />
+                        </div>
+                        <div>
+                            <span>List</span><input id="list-checkbox" type="checkbox" />
+                        </div>
+                    </div>
+                    <div class="caroul">
+                        <div>Autorotation</div>
+                        <div class="contain-btn-auto">
+                            <button class="btn-auto-play"><i class="fa-solid fa-play"></i></button>
+                            <button class="btn-auto-pause"><i class="fa-solid fa-pause"></i></button>
+                        </div>
+                        <div>
+                            <div>Animation</div>
+                            <label class="switch">
+                                <input id="input-animation" type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div>
+                            <span>Change Animation</span><input id="change-animation-checkbox" type="checkbox" />
+                        </div>
+                        <br />
+                        <div>
+                            <div>Select the duration for autorotation (in sec)</div>
+                            <div class="range_duration">
+                                <input type="range" id="input-duration" min="0" max="10" value="3">
+                                <span><span id="input-duration-value">3</span><span>s</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list">
+                        Number of displays
+                        <select id="ddlViewBy">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+
+                        </select>
+                    </div>
+
+                </div>
+                <ul class="page" style="overflow: hidden;width: 900px;background-color: none;">
+
+                </ul>
+            </div>
+        </div>
+        <div class="section_choose_list">
+            <div class="list-container">
+            </div>
+            <div class="page-list-container">
+                <ul class="paging-list" style="overflow: hidden;width: 500px;">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script>
+    var bntAutoPlay = $(".btn-auto-play");
+    var bntAutoPause = $(".btn-auto-pause");
+    var durationInput = $("#input-duration");
+    var btnSetting = $(".setting-icon");
+    var controllerSetting = $(".controller_options");
+    var listContainer = $(".list-container");
+    var chooseFileFrom = $("#choose-file-selected");
+    var idAuto; // duration loop id;
+    var myData = [];
+    var myItem = [];
+    var myChooseFile = "Documents";
+    var WebAbsoluteURL = _spPageContextInfo?.webAbsoluteUrl;
+    var portalUrl = _spPageContextInfo?.portalUrl;
+    var navigationInfo = _spPageContextInfo?.navigationInfo;
+    var quickLaunch = navigationInfo?.quickLaunch;
+    if (quickLaunch && quickLaunch?.length) {
+        let newChoose = quickLaunch.map((el) => {
+            return (`
+                    <option value="${el.Title}">${el.Title}</option>
+                `)
+        })
+        newChoose.join("");
+        chooseFileFrom.html(newChoose);
+
+    }
+    chooseFileFrom.on("change",()=>{
+        console.log((chooseFileFrom.val()));
+        myChooseFile = chooseFileFrom.val();
+        getItem(myChooseFile);
+
+    });
+    $(".container").html(`
+        <div class="loader-center">
+            <div class="loader"></div>
+        <div>
+    `);
+    function getItem(file) {
+        let myUrlFile = WebAbsoluteURL +`/_api/lists/getbytitle('${file}')/Items?$select=RedirectLink,Caption,Information,File/Name,File/ServerRelativeUrl`;
+        console.log("myUrlFile:",myUrlFile);
+        fetch(myUrlFile,{
+            method: 'GET',
+            headers: {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose",
+                "X-RequestDigest": $("#__REQUESTDIGEST").val()
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+                console.log('Success:', data);
+                if (data.d?.results) {
+                    return data.d.results;
+                }
+                else {
+                    return [];
+                }
+        })
+        .then((results) => {
+                let arrayInfor = [];
+                for (let index = 0; index < results.length; index++) {
+                    let item = results[index];
+                    let newItem = {
+                        id: index,
+                        information: item.Information || "",
+                        caption: item.Caption || "",
+                        redirectLink: item.RedirectLink || "",
+                        uri: item.__metadata?.uri || "",
+                        uriFile : item.File?.__deferred?.uri || "",
+                    }
+                    arrayInfor.push(newItem);
+
+                }
+
+                return arrayInfor;
+            })
+        .then((arrayInfor)=>{
+                let newValue =(arrayInfor.map(arrItem =>
+                    fetch(arrItem.uriFile,{
+                        method: 'GET', // or 'PUT'
+                        headers: {
+                            "accept": "application/json;odata=verbose",
+                            "content-type": "application/json;odata=verbose",
+                            "X-RequestDigest": $("#__REQUESTDIGEST").val()
+                        },
+                    }).then((response)=>{
+                        return response.json();
+                    }).then((data)=>{
+                        console.log("data:",data);
+                        
+                        if(data.d){
+                            return {
+                                ...arrItem,
+                                urlImge: portalUrl + data?.d?.ServerRelativeUrl?.substring(1),
+                               
+                            }
+                        }
+                        else
+                        {
+                            return {
+                                ...arrItem,
+                                urlImge:"",
+                            }
+                        }
+
+
+                    })
+                    
+                ));
+                
+                Promise.all(newValue).then((values)=>{
+                    console.log("values:",values);
+                    if(values){
+                        myData = values;
+                        app.start();
+                    }
+                 
+                }).catch((error) => {
+                console.error('Error111:', error);
+            });
+            })
+            .catch((error) => {
+                console.error('Error222:', error);
+            });
+    }
+
+    getItem("Documents");
+
+
+
+
+    // fetch('https://jsonplaceholder.typicode.com/photos?albumId=2')
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //         myData = data;
+    //         app.start()
+    //     });
+
+
+    const app = {
+        index: 0,
+        isList: false,
+        isCaroul: true,
+        pageCount: 1,
+        indexListStartCut: 0,
+        indexList: 0,
+        isStatusButtonSetting: false,
+        durationAuto: 3000,
+        isAnimation: false,
+        activeIndex: function (index) {
+            let slider = document.querySelectorAll(".slider-main");
+            slider.forEach((e) => {
+                e.classList.remove("active");
+                e.classList.remove("active2");
+            })
+            slider[index].classList.add(`${this.isAnimation ? "active2" : "active"}`);
+            this.addActivePage();
+            this.scrollToActivePage();
+            if (idAuto) {
+                this.autoRunAction();
+            }
+            this.handleRenderPaging();
+            this.checkShowReadMore();
+        },
+        nextClick: function () {
+            $(".next").on("click", () => {
+                this.actionNext();
+            });
+
+        },
+        actionNext: function () {
+            let slider = document.querySelectorAll(".slider-main");
+            this.index++;
+            if (this.index >= slider.length) {
+                this.index = 0;
+            }
+            this.activeIndex(this.index);
+
+        },
+
+        prevClick: function () {
+            $(".prev").on("click", () => {
+                this.actionPrev();
+            });
+
+
+        },
+        actionPrev: function () {
+            let slider = document.querySelectorAll(".slider-main");
+            this.index--;
+            if (this.index < 0) {
+                this.index = slider.length - 1;
+            }
+            this.activeIndex(this.index);
+        },
+        autoRunClick: function () {
+            bntAutoPlay.on("click", () => {
+                this.autoRunAction();
+                bntAutoPause.css("display", "block");
+                bntAutoPlay.css("display", "none");
+            });
+            bntAutoPause.on("click", () => {
+                if (idAuto) {
+                    clearInterval(idAuto);
+                }
+                bntAutoPlay.css("display", "block");
+                bntAutoPause.css("display", "none");
+            });
+        },
+
+        autoRunAction: function () {
+            if (idAuto) {
+                clearInterval(idAuto);
+            }
+            idAuto = setInterval(() => {
+                this.actionNext();
+            }, this.durationAuto);
+        },
+        handleSubmitDuration: function () {
+            durationInput.on("change", () => {
+                var value = durationInput.val();
+                $("#input-duration-value").html(value);
+
+
+                if (value) {
+                    this.durationAuto = (+value) * 1000;
+                }
+            })
+        },
+        handleResolveEvent: function () {
+            // button setting click
+
+            console.log("da click...");
+            btnSetting.on("click", () => {
+                if (this.isStatusButtonSetting) {
+                    this.isStatusButtonSetting = false;
+                    btnSetting.css("color", "black");
+                    controllerSetting.css("display", "none")
+
+                }
+                else {
+                    this.isStatusButtonSetting = true;
+                    controllerSetting.css("display", "block");
+                    btnSetting.css("color", "red");
+
+                }
+            });
+            $(".setting_close").on("click", () => {
+                btnSetting.css("color", "black");
+                controllerSetting.css("display", "none")
+            });
+            $("#input-animation").on("click", () => {
+                if ($("#input-animation").is(":checked")) {
+                    $(".slider-main").removeClass("no-animation");
+
+
+                }
+                else {
+
+                    $(".slider-main").addClass("no-animation");
+                }
+            });
+
+            //caroul setting click
+
+            $("#caroul-checkbox").on("click", () => {
+                if ($("#caroul-checkbox").is(":checked")) {
+                    this.isCaroul = true;
+                    this.isList = false;
+                    $("#caroul-checkbox").prop("checked", true);
+                    $("#list-checkbox").prop("checked", false);
+                }
+                else {
+                    this.isCaroul = false;
+                    this.isList = true;
+                    $("#caroul-checkbox").prop("checked", false);
+                    $("#list-checkbox").prop("checked", true);
+
+                }
+                this.handleShowType();
+
+            });
+
+            $("#list-checkbox").on("click", () => {
+                if ($("#list-checkbox").is(":checked")) {
+                    this.isList = true;
+                    this.isCaroul = false;
+                    $("#caroul-checkbox").prop("checked", false);
+                    $("#list-checkbox").prop("checked", true);
+                }
+                else {
+                    this.isList = false;
+                    this.isCaroul = true;
+                    $("#caroul-checkbox").prop("checked", true);
+                    $("#list-checkbox").prop("checked", false);
+                }
+
+                this.handleShowType();
+            });
+
+            //selection 
+            $("#ddlViewBy").on("change", () => {
+                this.pageCount = +($("#ddlViewBy").val());
+                this.indexList = 0;
+                this.renderList();
+            });
+
+            // change animation
+
+            $("#change-animation-checkbox").on("click", () => {
+                if ($("#change-animation-checkbox").is(":checked")) {
+                    this.isAnimation = true;
+
+                }
+                else {
+                    this.isAnimation = false;
+                }
+            });
+
+
+        },
+        handleRenderPaging: function () {
+            let myItem = $('.slider-main');
+            let pageCount = null;
+            let testArr = [];
+            for (let index = 0; index < myItem.length; index++) {
+                testArr.push((index + 1));
+            }
+            if (myItem && myItem.length) {
+                let start = this.index - 2 <= 0 ? 0 : (this.index - 2);
+                let newarr = (testArr.length > 5) ? testArr.slice((start + 5) > testArr.length ? testArr.length - 5 : start, (5 + start) > testArr.length ? testArr.length : (5 + start)) : testArr
+                pageCount = newarr.map((e, index) => {
+                    return (`
+                    <li class="page__numbers ${this.index == (e - 1) ? " active" : ""}">${e}</li>
+                `)
+                })
+
+                if (newarr[0] >= 3) {
+                    pageCount.unshift(`
+                <li class="page__dots">...</li>
+                `)
+                    pageCount.unshift(`<li class="page__numbers ">1</li>`)
+                }
+                else if (newarr[0] == 2) {
+                    pageCount.unshift(`<li class="page__numbers ">1</li>`)
+                }
+
+                if ((testArr[testArr.length - 1] - newarr[newarr.length - 1] >= 2) && (testArr.length > 5)) {
+                    pageCount.push(`<li class="page__dots">...</li>`)
+                    pageCount.push(`<li class="page__numbers ">${testArr.length}</li>`)
+                }
+                else if (testArr[testArr.length - 1] - newarr[newarr.length - 1] == 1 && testArr.length > 5) {
+                    pageCount.push(`<li class="page__numbers ">${testArr.length}</li>`)
+                }
+                // paging-list
+                pageCount.unshift(`
+        <li class="page__btn btn-prev-caroul">
+<span class="material-icons">
+	<i class="fa-solid fa-chevron-left">
+	</i>
+</span>
+</li>
+        `)
+                pageCount.push(`
+            <li class="page__btn btn-next-caroul">
+<span class="material-icons">
+	<i class="fa-solid fa-chevron-right">
+	</i>
+</span>
+</li>
+        `)
+                pageCount?.join("");
+                $(".page").html(pageCount);
+
+            }
+            $(".page__numbers").on("click", (e) => {
+                this.index = +(e.target.textContent) - 1;
+                console.log("this.index:", this.index);
+                this.activeIndex(this.index);
+
+            });
+            $(".btn-prev-caroul").on("click", () => {
+
+
+                this.actionPrev();
+            });
+            $(".btn-next-caroul").on("click", () => {
+                this.actionNext();
+            })
+
+
+        },
+        handleClickPageCount: function () {
+            let arrayPage = document.querySelectorAll(".page__numbers");
+            arrayPage.forEach((el, index) => {
+                el.addEventListener("click", () => {
+                    this.index = +el.textContent - 1;
+                    this.activeIndex(this.index);
+                })
+            })
+        },
+        addActivePage: function () {
+            let arrayPage = document.querySelectorAll(".page__numbers");
+            if (arrayPage && arrayPage.length) {
+                arrayPage.forEach((el, index) => {
+                    el.classList.remove("active");
+                });
+                arrayPage.forEach((el, index) => {
+                    if ((+el.textContent - 1) == this.index) {
+                        el.classList.add("active");
+                    }
+                });
+            }
+
+        },
+        scrollToActivePage: function () {
+            // console.log("aaaa:", $('.page__numbers.active'));
+            // setTimeout(() => {
+            //     $('.page__numbers.active').scrollIntoView({behavior: "smooth",block: "center", inline: "center"});
+            // }, 100);
+        },
+        handleShowType: function () {
+            if (this.isList) {
+                $(".caroul").css("display", "none");
+                $(".list").css("display", "block");
+
+                $(".section_choose_caroul").css("display", "none");
+                $(".section_choose_list").css("display", "block");
+
+
+            }
+            else {
+                $(".caroul").css("display", "block");
+                $(".list").css("display", "none");
+
+                $(".section_choose_caroul").css("display", "block");
+                $(".section_choose_list").css("display", "none");
+            }
+            if (idAuto) {
+                clearInterval(idAuto);
+            }
+        },
+
+        renderList() {
+            // console.log("hehe:", myItem);
+            let htmlString = null;
+
+            // console.log("pageCount:", this.pageCount);
+            // console.log("this.indexList:", this.indexList);
+            //indexList.
+            //myarrr;
+
+            let start = this.indexList * this.pageCount >= myItem.length ? (myItem.length - this.pageCount) :
+                this.indexList * this.pageCount
+                ;
+            let end = (this.indexList * this.pageCount + this.pageCount) >= myItem.length ? myItem.length :
+                (this.indexList * this.pageCount + this.pageCount);
+            ;
+
+            if (myItem && myItem.length) {
+                htmlString = myItem.slice(start, end).map((el, index) => {
+                    return (`
+                <div class="list-section">
+<div class="container-image">
+	<img class="container-image-img" src="${el.urlImge}" />
+</div>
+<div class="list-section-text">
+                        ${el.caption}
+                    </div>
+</div>
+                `)
+                });
+
+
+
+            }
+
+
+            htmlString?.join("");
+            listContainer.html(htmlString);
+            this.renderPaging();
+
+        },
+        renderPaging: function () {
+            let pageCount = null;
+            let valueNeedTo = (myItem.length / this.pageCount);
+            let lengthPage = Math.ceil(valueNeedTo);
+            let testArr = [];
+            for (let index = 0; index < lengthPage; index++) {
+                testArr.push((index + 1));
+            }
+            if (myItem && myItem.length) {
+                let start = this.indexList - 2 <= 0 ? 0 : (this.indexList - 2);
+                let newarr = (testArr.length > 5) ? testArr.slice((start + 5) > testArr.length ? testArr.length - 5 : start, (5 + start) > testArr.length ? testArr.length : (5 + start)) : testArr
+
+
+
+
+                pageCount = newarr.map((e, index) => {
+                    return (`
+                    <li class="page__ ${this.indexList == (e - 1) ? " active" : ""}">${e}</li>
+                `)
+                })
+
+                if (newarr[0] >= 3) {
+                    pageCount.unshift(`
+                <li class="page__dots">...</li>
+                `)
+                    pageCount.unshift(`<li class="page__ ">1</li>`)
+                }
+                else if (newarr[0] == 2) {
+                    pageCount.unshift(`<li class="page__ ">1</li>`)
+                }
+
+                if ((testArr[testArr.length - 1] - newarr[newarr.length - 1] >= 2) && (testArr.length > 5)) {
+                    pageCount.push(`<li class="page__dots">...</li>`)
+                    pageCount.push(`<li class="page__ ">${testArr.length}</li>`)
+                }
+                else if (testArr[testArr.length - 1] - newarr[newarr.length - 1] == 1 && testArr.length > 5) {
+                    pageCount.push(`<li class="page__ ">${testArr.length}</li>`)
+                }
+                // paging-list
+                pageCount.unshift(`
+        <li class="page__btn">
+<span class="material-icons">
+	<i class="fa-solid fa-chevron-left">
+
+        <
+	</i>
+</span>
+</li>
+        `)
+                pageCount.push(`
+            <li class="page__btn">
+<span class="material-icons">
+	<i class="fa-solid fa-chevron-right">
+	</i>
+</span>
+</li>
+        `)
+                pageCount?.join("");
+                $(".paging-list").html(pageCount);
+
+            }
+            $(".page__").on("click", (e) => {
+                this.indexList = +(e.target.textContent) - 1;
+                this.renderList();
+            })
+
+
+        },
+        checkShowReadMore: function () {
+            let elementActive = $(".slider-main.active");
+            let content = $(".slider-main.active").children(".content");
+            let warper = content.children(".content-wraper");
+            let readMore = content.children(".read-more");
+            let collapse = content.children(".collapse");
+            let contexText = warper.children(".content-text");
+            let warperHeight = warper.height();
+            let contextTextHeight = contexText.height();
+            if (contextTextHeight + 20 > warperHeight) {
+                readMore.html("Read more...")
+                readMore.on("click", () => {
+                    warper.css("overflow-y", "scroll");
+                    readMore.css("display", "none");
+                    collapse.css("display", "block");
+                });
+
+                collapse.on("click", () => {
+                    warper.css("overflow-y", "hidden");
+                    readMore.css("display", "block");
+                    collapse.css("display", "none");
+                });
+            }
+        },
+        renderDataCaroul: function () {
+            if (myData && myData.length) {
+                let myString = null;
+                myString = myData.map((e, index) => {
+                    return (`
+                    <div class="slider-main">
+                        <div class="image-main-container">
+                            <img class="image-main" src="${e.urlImge}" />
+                        </div>
+                        
+                        <div class="content">
+                            <div class="content-wraper">
+                            <div class="content-text">
+                                ${e.information}
+                            </div>
+                            </div>
+                            <div class="read-more"></div>
+                            <div class="collapse">Collapse</div>
+                        </div>
+                    </div>
+                    `)
+                })
+                myString.unshift(`
+                <div class="next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+                `)
+
+                myString.unshift(`
+                    <div class="prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                `)
+
+                myString?.join("");
+                $(".container").html(myString);
+                this.activeIndex(this.index);
+
+            }
+        },
+        start: function () {
+            this.renderDataCaroul();
+            this.nextClick();
+            this.prevClick();
+            this.autoRunClick();
+            this.handleSubmitDuration();
+            this.handleResolveEvent();
+            this.handleRenderPaging();
+            // handle active paging
+            this.handleClickPageCount();
+            this.handleShowType();
+            this.renderList();
+            this.checkShowReadMore();
+
+        }
+    }
+    // app.start();
+</script>

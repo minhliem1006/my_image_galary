@@ -59,27 +59,27 @@ var myItem = [
 
 const app = {
     index: 0,
-    isList: true,
-    isCaroul: false,
+    isList: false,
+    isCaroul: true,
     pageCount: 1,
     indexListStartCut: 0,
     indexList: 0,
     isStatusButtonSetting: false,
     durationAuto: 3000,
-
-
-
-
+    isAnimation : false,
     activeIndex: function (index) {
         slider.forEach((e) => {
             e.classList.remove("active");
+            e.classList.remove("active2");
         })
-        slider[index].classList.add("active");
+        slider[index].classList.add(`${this.isAnimation ? "active2" : "active"}`);
         this.addActivePage();
         this.scrollToActivePage();
         if (idAuto) {
             this.autoRunAction();
         }
+        this.handleRenderPaging();
+        this.checkShowReadMore();
     },
     nextClick: function () {
         $(".next").on("click", () => {
@@ -186,7 +186,6 @@ const app = {
                 $("#list-checkbox").prop("checked", false);
             }
             else {
-                console.log("false");
                 this.isCaroul = false;
                 this.isList = true;
                 $("#caroul-checkbox").prop("checked", false);
@@ -198,7 +197,6 @@ const app = {
         });
 
         $("#list-checkbox").on("click", () => {
-            console.log("list");
             if ($("#list-checkbox").is(":checked")) {
                 this.isList = true;
                 this.isCaroul = false;
@@ -206,7 +204,6 @@ const app = {
                 $("#list-checkbox").prop("checked", true);
             }
             else {
-                console.log("false");
                 this.isList = false;
                 this.isCaroul = true;
                 $("#caroul-checkbox").prop("checked", true);
@@ -218,26 +215,82 @@ const app = {
 
         //selection 
         $("#ddlViewBy").on("change", () => {
-            console.log("hehehee");
-            console.log($("#ddlViewBy").val());
             this.pageCount = +($("#ddlViewBy").val());
             this.indexList = 0;
             this.renderList();
         });
 
+        // change animation
+
+        $("#change-animation-checkbox").on("click", () => {
+            if ($("#change-animation-checkbox").is(":checked")) {
+                this.isAnimation = true;
+               
+            }
+            else {
+                this.isAnimation = false;
+            }
+        });
 
 
     },
     handleRenderPaging: function () {
-        let array = $('.slider-main');
-        if (array && array.length) {
-            let paging = [];
-            for (let i = 1; i <= array.length; i++) {
-                paging.push(`<li id="page__numbers_id-${i}" class="page__numbers"> ${i}</li>`);
-            }
-            paging = paging.join('');
-            $('.page').html(paging)
+        let myItem = $('.slider-main');
+        let pageCount = null;
+        let testArr = [];
+        for (let index = 0; index < myItem.length; index++) {
+            testArr.push((index + 1));
         }
+        if (myItem && myItem.length) {
+            let start = this.index - 2 <= 0 ? 0 : (this.index - 2);
+            let newarr = (testArr.length > 5) ? testArr.slice((start + 5) > testArr.length ? testArr.length - 5 : start, (5 + start) > testArr.length ? testArr.length : (5 + start)) : testArr
+            pageCount = newarr.map((e, index) => {
+                return (`
+                    <li class="page__numbers ${this.index == (e - 1) ? " active" : ""}">${e}</li>
+                `)
+            })
+
+            if (newarr[0] >= 3) {
+                pageCount.unshift(`
+                <li class="page__dots">...</li>
+                `)
+                pageCount.unshift(`<li class="page__numbers ">1</li>`)
+            }
+            else if (newarr[0] == 2) {
+                pageCount.unshift(`<li class="page__numbers ">1</li>`)
+            }
+
+            if ((testArr[testArr.length - 1] - newarr[newarr.length - 1] >= 2) && (testArr.length > 5)) {
+                pageCount.push(`<li class="page__dots">...</li>`)
+                pageCount.push(`<li class="page__numbers ">${testArr.length}</li>`)
+            }
+            else if (testArr[testArr.length - 1] - newarr[newarr.length - 1] == 1 && testArr.length > 5) {
+                pageCount.push(`<li class="page__numbers ">${testArr.length}</li>`)
+            }
+            // paging-list
+            pageCount.unshift(`
+        <li class="page__btn btn-prev-caroul"><span class="material-icons"><i class="fa-solid fa-chevron-left"></i></span></li>
+        `)
+            pageCount.push(`
+            <li class="page__btn btn-next-caroul"><span class="material-icons"> <i class="fa-solid fa-chevron-right"></i></span></li>
+        `)
+            pageCount.join("");
+            $(".page").html(pageCount);
+
+        }
+        $(".page__numbers").on("click", (e) => {
+            this.index = +(e.target.textContent) - 1;
+            this.activeIndex(this.index);
+            
+        });    
+        $(".btn-prev-caroul").on("click",()=>{
+            this.actionPrev();
+        });
+        $(".btn-next-caroul").on("click",()=>{
+            this.actionNext();
+        })
+
+
     },
     handleClickPageCount: function () {
         let arrayPage = document.querySelectorAll(".page__numbers");
@@ -291,23 +344,23 @@ const app = {
     },
 
     renderList() {
-        console.log("hehe:", myItem);
+        // console.log("hehe:", myItem);
         let html = null;
 
-        console.log("pageCount:",this.pageCount);
-        console.log("this.indexList:",this.indexList);
+        // console.log("pageCount:", this.pageCount);
+        // console.log("this.indexList:", this.indexList);
         //indexList.
         //myarrr;
 
-        let start = this.indexList*this.pageCount >= myItem.length ? (myItem.length - this.pageCount) :
-            this.indexList*this.pageCount
-        ;
-        let end = (this.indexList*this.pageCount+this.pageCount) >= myItem.length ? myItem.length :
-        (this.indexList*this.pageCount+this.pageCount);
+        let start = this.indexList * this.pageCount >= myItem.length ? (myItem.length - this.pageCount) :
+            this.indexList * this.pageCount
+            ;
+        let end = (this.indexList * this.pageCount + this.pageCount) >= myItem.length ? myItem.length :
+            (this.indexList * this.pageCount + this.pageCount);
         ;
 
         if (myItem && myItem.length) {
-            html = myItem.slice(start, end ).map((el, index) => {
+            html = myItem.slice(start, end).map((el, index) => {
                 return (`
                 <div class="list-section">
                     <div class="container-image">
@@ -332,22 +385,22 @@ const app = {
     },
     renderPaging: function () {
         let pageCount = null;
-        let valueNeedTo  = (myItem.length/this.pageCount);
+        let valueNeedTo = (myItem.length / this.pageCount);
         let lengthPage = Math.ceil(valueNeedTo);
         let testArr = [];
         for (let index = 0; index < lengthPage; index++) {
-            testArr.push((index+1));
+            testArr.push((index + 1));
         }
         if (myItem && myItem.length) {
-            let start = this.indexList - 2 <= 0 ? 0 : (this.indexList - 2) ;
-            let newarr =(testArr.length>5) ? testArr.slice((start + 5) > testArr.length ? testArr.length - 5 : start, (5 + start) > testArr.length ? testArr.length : (5 + start)) : testArr
-            
+            let start = this.indexList - 2 <= 0 ? 0 : (this.indexList - 2);
+            let newarr = (testArr.length > 5) ? testArr.slice((start + 5) > testArr.length ? testArr.length - 5 : start, (5 + start) > testArr.length ? testArr.length : (5 + start)) : testArr
 
 
-            
+
+
             pageCount = newarr.map((e, index) => {
                 return (`
-                    <li class="page__ ${this.indexList == (e-1) ? " active" : ""}">${e}</li>
+                    <li class="page__ ${this.indexList == (e - 1) ? " active" : ""}">${e}</li>
                 `)
             })
 
@@ -379,13 +432,49 @@ const app = {
             $(".paging-list").html(pageCount);
 
         }
-        $(".page__").on("click",(e)=>{
-            console.log("indexList:",e.target.textContent);
+        $(".page__").on("click", (e) => {
             this.indexList = +(e.target.textContent) - 1;
             this.renderList();
         })
+        
+
+    },
+    checkShowReadMore:function(){
+       let elementActive = $(".slider-main.active");
+       let content = $(".slider-main.active").children(".content");
+       let warper = content.children(".content-wraper");
+       let readMore = content.children(".read-more");
+       let collapse = content.children(".collapse");
+       let contexText = warper.children(".content-text");
+       let warperHeight =  warper.height();
+       console.log("warper:",warper);
+       console.log("warperHeight:",warperHeight);
+
+       
+       let contextTextHeight = contexText.height();
+
+       console.log("contexText:",contexText);
+       console.log("contextTextHeight:",contextTextHeight);
+
+        if(contextTextHeight + 20 > warperHeight){
+            readMore.html("Read more...")
+            readMore.on("click",()=>{
+                warper.css("overflow-y","scroll");
+                readMore.css("display","none");
+                collapse.css("display","block");
+            });
+
+            collapse.on("click",()=>{
+                warper.css("overflow-y","hidden");
+                readMore.css("display","block");
+                collapse.css("display","none");
+            });
 
 
+        }
+        
+
+       
     },
     start: function () {
         this.nextClick();
@@ -398,6 +487,7 @@ const app = {
         this.handleClickPageCount();
         this.handleShowType();
         this.renderList();
+        this.checkShowReadMore();
 
     }
 }

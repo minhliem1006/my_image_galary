@@ -1,0 +1,68 @@
+<p id="demo">Nhấn vào đây để thay đổi màu chữ.</p>
+<p>Nhấn vào thẻ p bên trên để kích hoạt hàm thay đổi màu của chữ trong thẻ sang đỏ.</p>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $("#demo").on("click", () => {
+        console.log("aaaa");
+
+        console.log("_spPageContextInfo:",_spPageContextInfo);
+
+        var WebAbsoluteURL = _spPageContextInfo.webAbsoluteUrl;
+
+        var portalUrl = _spPageContextInfo.portalUrl;
+        var navigationInfo = _spPageContextInfo.navigationInfo;
+        var quickLaunch = navigationInfo?.quickLaunch;
+        let documentUrl = null;
+        if(quickLaunch && quickLaunch.length){
+            quickLaunch.forEach(element => {
+                if(element.Title === "Documents"){
+                    documentUrl = element.Url;
+                }
+            });
+        }
+        console.log("documentUrl:",documentUrl);
+
+        console.log('navigationInfo:', navigationInfo);
+        console.log('quickLaunch:', quickLaunch);
+        console.log('portalUrl:', portalUrl);
+
+
+        console.log('WebAbsoluteURL:', WebAbsoluteURL);
+        console.log('listTitle', _spPageContextInfo.listTitle);
+
+        let myUrlChoose = null;
+        if(documentUrl){
+            myUrlChoose = portalUrl + documentUrl.substring(1);
+        }
+
+        // let uriii = WebAbsoluteURL + `/_api/web/lists/GetByTitle('Documents')`;
+        let uriii = WebAbsoluteURL + `/_api/lists/getbytitle('Images')/Items`;
+        // https://avantility.sharepoint.com/sites/dev/liemho/_api/web/lists/GetByTitle('Images')
+        console.log("uriii:",uriii);
+        $.ajax({
+                type: "GET",
+                url: uriii,
+                headers:{
+                    "accept":"application/json;odata=verbose",
+                    "content-type":"application/json;odata=verbose",
+                    "X-RequestDigest":$("#__REQUESTDIGEST").val()
+
+                },
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.d);
+                },
+                error: function (error) {
+
+                    // jsonValue = jQuery.parseJSON(error.responseText);
+                    console.log("error" + error.responseText);
+                }
+            });
+       
+
+        
+
+    });
+
+</script>

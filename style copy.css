@@ -70,7 +70,7 @@ body {
 
 /* liem css */
 .container {
-    width: 60%;
+    width: 100%;
     height: 500px;
     /* border-radius: 16px; */
     background-color: black;
@@ -160,7 +160,7 @@ body {
 
 .slider-main.active {
     display: flex !important;
-    animation: animationTest 1s ease-in;
+    animation: animationTest2 .5s ease-in;
 }
 
 .slider-main.active2 {
@@ -207,13 +207,17 @@ body {
     }
 }
 
-
-.image-main-container{
-    flex: 1;
-    width: 100%;
+.image-main-container {
+    width: 50%;
     height: 100%;
-    background-color: red;
+    background-color: grey;
+    flex: 1;
+    background-image: url("https://img6.thuthuatphanmem.vn/uploads/2022/11/18/hinh-dang-loading_093255098.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
+
 .image-main {
     object-fit: cover;
     width: 100%;
@@ -224,12 +228,13 @@ body {
 .content {
     width: 100%;
     height: 100%;
+    flex: 1;
     background-color: #fff;
     display: flex;
     /* justify-content: center;
     align-items: center; */
     flex-direction: column;
-    padding: 10px;
+    padding: 20px;
     overflow: hidden;
 
 
@@ -401,7 +406,7 @@ ul {
     cursor: pointer;
 }
 
-.page__btn:active{
+.page__btn:active {
     color: #8c62b7;
 }
 
@@ -463,7 +468,7 @@ ul {
 
 
 .controller_options {
-    background-color: #23adad;
+    background-color: #fff;
     padding: 20px;
     position: absolute;
     top: -120%;
@@ -597,8 +602,18 @@ input:checked+.slider:before {
 }
 
 .section_choose_caroul {
-    display: block;
+    display: flex;
+    width: 60%;
 }
+
+/* @media (max-width:1023px)
+{
+    .section_choose_caroul {
+        display: flex;
+        width:50%;
+    }
+} */
+
 
 .section_choose_list {
     display: none;
